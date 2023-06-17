@@ -1,6 +1,8 @@
-import { Entity, Column } from 'typeorm';
+import { Entity, Column, OneToMany, ManyToOne } from 'typeorm';
 import { BaseEntity } from '../base/base.entity';
 import { UserRole } from './role';
+import { Post } from '../post/post.entity';
+import { Like } from '../like/like.entity';
 
 @Entity()
 export class User extends BaseEntity {
@@ -21,4 +23,10 @@ export class User extends BaseEntity {
 
   @Column({ type: 'enum', enum: UserRole, default: UserRole.USER })
   role: string;
+
+  @OneToMany(() => Post, (post) => post.user)
+  posts: Post[];
+
+  @ManyToOne(() => Like, (like) => like.users)
+  like: Like;
 }
