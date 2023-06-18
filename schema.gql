@@ -2,6 +2,68 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type Mutation {
+  """로그인"""
+  signin(input: SingInInputDto!): SingInOutputDto!
+
+  """회원가입"""
+  signup(input: SingUpInputDto!): SingUpOutputDto!
+}
+
 type Query {
+  """내 정보 가져오기"""
+  getMe: User!
   hello: String!
+}
+
+input SingInInputDto {
+  """이메일"""
+  email: String!
+
+  """비밀번호"""
+  password: String!
+}
+
+type SingInOutputDto {
+  """리프레쉬 토큰"""
+  refreshToken: String!
+
+  """토큰"""
+  token: String!
+}
+
+input SingUpInputDto {
+  email: String!
+  nickName: String!
+  password: String!
+}
+
+type SingUpOutputDto {
+  isSuccess: Boolean!
+}
+
+type User {
+  created_date: DateTime!
+  deleted_date: DateTime!
+  email: String!
+  id: ID!
+  nick_name: String!
+  push_token: String
+  refresh_token: String
+  role: UserRole!
+  updated_data: DateTime!
+}
+
+"""유저 권한 리스트"""
+enum UserRole {
+  """관리자"""
+  ADMIN
+
+  """일반 유저"""
+  USER
 }
