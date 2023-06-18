@@ -76,12 +76,12 @@ export class AuthService {
     }
 
     // 토큰 생성
-    const token = this.jwtService.sign({ id: user.id }, { expiresIn: '10m' });
+    const token = this.jwtService.sign({ id: user.id }, { expiresIn: '10d' });
 
     // 리프레시 토큰 생성
     const refreshToken = this.jwtService.sign(
       { id: user.id },
-      { expiresIn: '1d' },
+      { expiresIn: '10d' },
     );
 
     // user의 리프레시토큰 업데이트
