@@ -9,6 +9,7 @@ import { AuthModule } from './auth/auth.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import * as Joi from 'joi';
 import { PostModule } from './post/post.module';
+import { BoardModule } from './board/board.module';
 
 @Module({
   imports: [
@@ -47,6 +48,7 @@ import { PostModule } from './post/post.module';
     AuthModule,
     UserModule,
     PostModule,
+    BoardModule,
   ],
   controllers: [AppController],
   providers: [AppService],
