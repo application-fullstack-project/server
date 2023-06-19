@@ -1,5 +1,5 @@
 import { UseGuards } from '@nestjs/common';
-import { Resolver, Mutation, Args, Query } from '@nestjs/graphql';
+import { Resolver, Mutation, Args, Query, Int } from '@nestjs/graphql';
 import { BoardService } from './board.service';
 import { AuthGuard } from 'src/guard/gql-guard';
 import { Board } from 'src/db/board/board.entity';
@@ -34,8 +34,8 @@ export class BoardResolver {
   @Roles('ADMIN')
   @Mutation(() => Boolean)
   async deleteBoard(
-    @Args('id', { type: () => Number }) id: number,
+    @Args('boardId', { type: () => Int }) boardId: number,
   ): Promise<Board> {
-    return await this.boardService.deleteBoard(id);
+    return await this.boardService.deleteBoard(boardId);
   }
 }

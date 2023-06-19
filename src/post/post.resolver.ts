@@ -1,6 +1,6 @@
 import { LikePostInputDto } from './dto/like-post.dto';
 import { CreatePostInputDto } from './dto/create-post.dto';
-import { Resolver, Mutation, Args, Query } from '@nestjs/graphql';
+import { Resolver, Mutation, Query, Args, Int } from '@nestjs/graphql';
 import { PostService } from './post.service';
 import { Post } from 'src/db/post/post.entity';
 import { UseGuards } from '@nestjs/common';
@@ -27,7 +27,7 @@ export class PostResolver {
   @UseGuards(AuthGuard)
   @Query(() => Post)
   async getOnePost(
-    @Args('postId', { type: () => Number }) postId: number,
+    @Args('id', { type: () => Int }) postId: number,
   ): Promise<Post> {
     return await this.postService.getOnePost(postId);
   }
@@ -44,9 +44,9 @@ export class PostResolver {
   @UseGuards(AuthGuard)
   @Mutation(() => Boolean)
   async deletePost(
-    @Args('id', { type: () => Number }) id: number,
+    @Args('postId', { type: () => Int }) postId: number,
   ): Promise<boolean> {
-    return await this.postService.deletePost(id);
+    return await this.postService.deletePost(postId);
   }
 
   @UseGuards(AuthGuard)
@@ -62,7 +62,7 @@ export class PostResolver {
   @UseGuards(AuthGuard)
   @Mutation(() => Boolean)
   async deleteComment(
-    @Args('commentId', { type: () => Number }) commentId: number,
+    @Args('commentId', { type: () => Int }) commentId: number,
     @CurrentUser() user: User,
   ): Promise<boolean> {
     return await this.postService.deleteComment(commentId, user);

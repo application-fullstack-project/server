@@ -1,4 +1,4 @@
-import { Field, InputType } from '@nestjs/graphql';
+import { Field, InputType, Int } from '@nestjs/graphql';
 
 @InputType()
 export class CreatePostInputDto {
@@ -11,7 +11,7 @@ export class CreatePostInputDto {
   @Field(() => String, { nullable: true })
   image?: string;
 
-  @Field(() => Number)
+  @Field(() => Int)
   boardId: number;
 }
 
