@@ -4,6 +4,7 @@ import { UserRole } from './role';
 import { Post } from '../post/post.entity';
 import { Like } from '../like/like.entity';
 import { Field, ObjectType, registerEnumType } from '@nestjs/graphql';
+import { Comment } from '../comment/comment.entity';
 
 registerEnumType(UserRole, {
   name: 'UserRole',
@@ -44,9 +45,16 @@ export class User extends BaseEntity {
   @Field(() => UserRole)
   role: UserRole;
 
+  @Column({ type: 'boolean', default: true })
+  @Field(() => Boolean)
+  isPush: boolean;
+
   @OneToMany(() => Post, (post) => post.user)
   posts: Post[];
 
-  @ManyToOne(() => Like, (like) => like.users)
-  like: Like;
+  @OneToMany(() => Like, (like) => like.user)
+  likes: Like[];
+
+  @OneToMany(() => Comment, (comment) => comment.user)
+  comments: Comment[];
 }
