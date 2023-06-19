@@ -14,17 +14,8 @@ export class UserService {
     return 'Hello World!';
   }
 
-  async getMe(): Promise<User> {
-    const user = await this.userRepository.findOne({
-      where: {
-        id: 9,
-      },
-    });
-
-    if (!user) {
-      throw new Error('유저를 찾을 수 없습니다.');
-    }
-
+  async getMe(user: User): Promise<User> {
+    // console.log(user);
     return user;
   }
 
@@ -34,6 +25,40 @@ export class UserService {
         id,
       },
     });
+    return user;
+  }
+
+  async changeNickname(nickname: string, { id: userId }: User) {
+    const user = await this.userRepository.findOne({
+      where: {
+        id: userId,
+      },
+    });
+
+    if (!user) {
+      throw new Error('유저를 찾을 수 없습니다.');
+    }
+
+    user.nick_name = nickname;
+    await this.userRepository.save(user);
+
+    return user;
+  }
+
+  async changePushSetting(isPush: boolean, { id: userId }: User) {
+    const user = await this.userRepository.findOne({
+      where: {
+        id: userId,
+      },
+    });
+
+    if (!user) {
+      throw new Error('유저를 찾을 수 없습니다.');
+    }
+
+    user.isPush = isPush;
+    await this.userRepository.save(user);
+
     return user;
   }
 }
