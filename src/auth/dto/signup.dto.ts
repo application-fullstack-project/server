@@ -1,4 +1,10 @@
-import { Field, InputType } from '@nestjs/graphql';
+import { Field, InputType, ObjectType } from '@nestjs/graphql';
+
+@ObjectType()
+export class SingUpOutputDto {
+  @Field(() => Boolean)
+  isSuccess: boolean;
+}
 
 @InputType()
 export class SingUpInputDto {
