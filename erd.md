@@ -2,9 +2,9 @@
 erDiagram
 user {
     int id PK
-    created_date timestamp
-    updated_data timestamp
-    deleted_date timestamp
+    timestamp created_date
+    timestamp updated_data
+    timestamp deleted_date
     string email UK 
     string nick_name UK
     string password
@@ -14,25 +14,33 @@ user {
 }
 post {
     int id PK
-    created_date timestamp
-    updated_data timestamp
-    deleted_date timestamp
+    timestamp created_date
+    timestamp updated_data
+    timestamp deleted_date
     string title
     string content
     string image "optional"
 }
 board {
     int id PK
-    created_date timestamp
-    updated_data timestamp
-    deleted_date timestamp
+    timestamp created_date
+    timestamp updated_data
+    timestamp deleted_date
     string title
 }
 like {
     int id PK
-    created_date timestamp
-    updated_data timestamp
-    deleted_date timestamp
+    timestamp created_date
+    timestamp updated_data
+    timestamp deleted_date
+}
+comment {
+    int id PK
+    timestamp created_date
+    timestamp updated_data
+    timestamp deleted_date
+    string content
+    int parent_id "optional"
 }
 ROLE_ENUM {
     string ADMIN
@@ -42,4 +50,6 @@ user ||--o{ post : user-post
 board ||--o{ post : board-post
 like ||--o{ user : like-user
 like ||--o{ post : like-post
+post ||--o{ comment : post-comment
+user ||--o{ comment : user-comment
 ```
