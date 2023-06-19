@@ -23,6 +23,7 @@ export class AuthResolver {
   }
 
   @Mutation(() => SingInOutputDto, { description: '로그인' })
+  @UsePipes(new TransformEmailPipe())
   async signin(
     @Args({ name: 'input', type: () => SingInInputDto })
     input: SingUpInputDto,
