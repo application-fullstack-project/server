@@ -24,15 +24,15 @@ export class Post extends BaseEntity {
   @ManyToOne(() => User, (user) => user.posts)
   user: User;
 
-  @Field(() => Board, { nullable: false })
   @ManyToOne(() => Board, (board) => board.posts)
+  @Field(() => Board, { nullable: false })
   board: Board;
 
+  @OneToMany(() => Like, (like) => like.post)
   @Field(() => [Like], { nullable: true })
-  @OneToMany(() => Like, (like) => like.user)
   likes: Like[];
 
-  @Field(() => [Comment], { nullable: true })
   @OneToMany(() => Comment, (comment) => comment.post)
+  @Field(() => [Comment], { nullable: true })
   comments: Comment[];
 }

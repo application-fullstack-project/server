@@ -1,7 +1,7 @@
 import { Post } from './../db/post/post.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Injectable } from '@nestjs/common';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import {
   CreatePostInputDto,
   LikePostInputDto,
@@ -49,16 +49,32 @@ export class PostService {
       where: {
         id,
       },
-      relations: ['board', 'likes', 'comments'],
+      relations: ['user', 'board'],
     });
-
-    console.log(post);
 
     if (!post) {
       throw new GraphQLError('게시글을 찾을 수 없습니다.');
     }
 
     return post;
+  }
+
+  async getLikesByPostId(postIds: number[]) {
+    const likes = await this.likeRepository.find({
+      where: {
+        postId: In(postIds),
+      },
+    });
+    return likes;
+  }
+
+  async getCommentsByPostId(postIds: number[]) {
+    const likes = await this.commentRepository.find({
+      where: {
+        postId: In(postIds),
+      },
+    });
+    return likes;
   }
 
   async updatePost({ id, title, content, image }: UpdatePostInputDto) {
@@ -125,7 +141,7 @@ export class PostService {
     const comment = await this.commentRepository.save(
       this.commentRepository.create({
         content,
-        parent_id: parentId,
+        parent_id: parentId ? parentId : null,
         post: {
           id: postId,
         },
@@ -134,6 +150,7 @@ export class PostService {
         },
       }),
     );
+    // TODO: 반환값 수정 필요
     return comment;
   }
 

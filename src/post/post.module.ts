@@ -7,9 +7,10 @@ import { PostService } from './post.service';
 import { UserService } from 'src/user/user.service';
 import { Like } from 'src/db/like/like.entity';
 import { Comment } from 'src/db/comment/comment.entity';
+import { LoaderService } from 'src/loader/loader.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([User, Post, Like, Comment])],
-  providers: [PostService, PostResolver, UserService],
+  providers: [PostService, PostResolver, UserService, LoaderService],
 })
 export class PostModule {}

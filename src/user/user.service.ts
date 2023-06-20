@@ -15,7 +15,6 @@ export class UserService {
   }
 
   async getMe(user: User): Promise<User> {
-    // console.log(user);
     return user;
   }
 

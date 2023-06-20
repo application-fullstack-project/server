@@ -1,6 +1,15 @@
 import { LikePostInputDto } from './dto/like-post.dto';
 import { CreatePostInputDto } from './dto/create-post.dto';
-import { Resolver, Mutation, Query, Args, Int } from '@nestjs/graphql';
+import {
+  Resolver,
+  Mutation,
+  Query,
+  Args,
+  Int,
+  ResolveField,
+  Parent,
+  Context,
+} from '@nestjs/graphql';
 import { PostService } from './post.service';
 import { Post } from 'src/db/post/post.entity';
 import { UseGuards } from '@nestjs/common';
@@ -10,9 +19,20 @@ import { CurrentUser } from 'src/guard/current-user';
 import { User } from 'src/db/user/user.entity';
 import { CreateCommentInputDto } from './dto/comment.dto';
 import { Comment } from 'src/db/comment/comment.entity';
-@Resolver()
+import { Like } from 'src/db/like/like.entity';
+import {
+  CommentsByPostIdLoader,
+  LikeByPostIdLoader,
+  LoaderService,
+} from 'src/loader/loader.service';
+import { Board } from 'src/db/board/board.entity';
+
+@Resolver(() => Post)
 export class PostResolver {
-  constructor(private readonly postService: PostService) {}
+  constructor(
+    private readonly postService: PostService,
+    private readonly loaderService: LoaderService,
+  ) {}
 
   @UseGuards(AuthGuard)
   @Mutation(() => Post)
@@ -30,6 +50,22 @@ export class PostResolver {
     @Args('id', { type: () => Int }) postId: number,
   ): Promise<Post> {
     return await this.postService.getOnePost(postId);
+  }
+
+  @ResolveField('likes', () => [Like])
+  async getLikesByPostId(
+    @Parent() { id: postId }: Post,
+    @Context('likeByPostLoader') { loader }: LikeByPostIdLoader,
+  ) {
+    return await loader.load(postId);
+  }
+
+  @ResolveField('comments', () => [Comment])
+  async getCommentsByPostId(
+    @Parent() { id: postId }: Post,
+    @Context('commentByPostLoader') { loader }: CommentsByPostIdLoader,
+  ) {
+    return await loader.load(postId);
   }
 
   @UseGuards(AuthGuard)

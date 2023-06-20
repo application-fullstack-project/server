@@ -1,4 +1,4 @@
-import { Entity, Column, OneToMany, ManyToOne } from 'typeorm';
+import { Entity, Column, OneToMany } from 'typeorm';
 import { BaseEntity } from '../base/base.entity';
 import { UserRole } from './role';
 import { Post } from '../post/post.entity';
@@ -50,11 +50,14 @@ export class User extends BaseEntity {
   isPush: boolean;
 
   @OneToMany(() => Post, (post) => post.user)
+  @Field(() => [Post], { nullable: true })
   posts: Post[];
 
   @OneToMany(() => Like, (like) => like.user)
+  @Field(() => [Like], { nullable: true })
   likes: Like[];
 
   @OneToMany(() => Comment, (comment) => comment.user)
+  @Field(() => [Comment], { nullable: true })
   comments: Comment[];
 }

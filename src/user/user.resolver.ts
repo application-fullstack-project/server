@@ -4,7 +4,6 @@ import { User } from 'src/db/user/user.entity';
 import { AuthGuard } from 'src/guard/gql-guard';
 import { UseGuards } from '@nestjs/common';
 import { CurrentUser } from 'src/guard/current-user';
-import { Roles } from 'src/guard/role-decorator';
 
 @Resolver()
 export class UserResolver {
@@ -16,7 +15,6 @@ export class UserResolver {
   }
 
   @UseGuards(AuthGuard)
-  @Roles('ADMIN')
   @Query(() => User, { description: '내 정보 가져오기' })
   async getMe(@CurrentUser() user: User) {
     return await this.userService.getMe(user);
