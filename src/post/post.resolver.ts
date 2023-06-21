@@ -1,5 +1,4 @@
-import { LikePostInputDto } from './dto/like-post.dto';
-import { CreatePostInputDto } from './dto/create-post.dto';
+import { FindPostByTitleInputDto } from './dto/find-post.dto';
 import {
   Resolver,
   Mutation,
@@ -11,28 +10,21 @@ import {
   Context,
 } from '@nestjs/graphql';
 import { PostService } from './post.service';
-import { Post } from 'src/db/post/post.entity';
 import { UseGuards } from '@nestjs/common';
 import { AuthGuard } from 'src/guard/gql-guard';
-import { UpdatePostInputDto } from './dto';
 import { CurrentUser } from 'src/guard/current-user';
-import { User } from 'src/db/user/user.entity';
-import { CreateCommentInputDto } from './dto/comment.dto';
-import { Comment } from 'src/db/comment/comment.entity';
-import { Like } from 'src/db/like/like.entity';
+import { CommentsByPostIdLoader, LikeByPostIdLoader } from 'src/loader/types';
 import {
-  CommentsByPostIdLoader,
-  LikeByPostIdLoader,
-  LoaderService,
-} from 'src/loader/loader.service';
-import { Board } from 'src/db/board/board.entity';
+  CreateCommentInputDto,
+  CreatePostInputDto,
+  LikePostInputDto,
+  UpdatePostInputDto,
+} from './dto';
+import { Like, Post, Comment, User } from 'src/db';
 
 @Resolver(() => Post)
 export class PostResolver {
-  constructor(
-    private readonly postService: PostService,
-    private readonly loaderService: LoaderService,
-  ) {}
+  constructor(private readonly postService: PostService) {}
 
   @UseGuards(AuthGuard)
   @Mutation(() => Post)
@@ -81,12 +73,13 @@ export class PostResolver {
   @Mutation(() => Boolean)
   async deletePost(
     @Args('postId', { type: () => Int }) postId: number,
+    @CurrentUser() user: User,
   ): Promise<boolean> {
-    return await this.postService.deletePost(postId);
+    return await this.postService.deletePost(postId, user);
   }
 
   @UseGuards(AuthGuard)
-  @Mutation(() => Post)
+  @Mutation(() => Comment)
   async createComment(
     @Args('input', { type: () => CreateCommentInputDto })
     input: CreateCommentInputDto,
@@ -111,5 +104,14 @@ export class PostResolver {
     @CurrentUser() user: User,
   ): Promise<boolean> {
     return await this.postService.likePost(input, user);
+  }
+
+  @UseGuards(AuthGuard)
+  @Mutation(() => Post)
+  async findPostByTitle(
+    @Args('input', { type: () => FindPostByTitleInputDto })
+    input: FindPostByTitleInputDto,
+  ): Promise<Post> {
+    return await this.postService.findPostByTitle(input);
   }
 }

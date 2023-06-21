@@ -1,9 +1,9 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { UserService } from './user.service';
-import { User } from 'src/db/user/user.entity';
 import { AuthGuard } from 'src/guard/gql-guard';
 import { UseGuards } from '@nestjs/common';
 import { CurrentUser } from 'src/guard/current-user';
+import { User } from 'src/db';
 
 @Resolver()
 export class UserResolver {

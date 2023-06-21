@@ -1,16 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import * as DataLoader from 'dataloader';
-import { Like } from 'src/db/like/like.entity';
 import { PostService } from 'src/post/post.service';
-import { Comment } from 'src/db/comment/comment.entity';
-
-export interface LikeByPostIdLoader {
-  loader: DataLoader<number, Like[]>;
-}
-
-export interface CommentsByPostIdLoader {
-  loader: DataLoader<number, Comment[]>;
-}
+import { CommentsByPostIdLoader, LikeByPostIdLoader } from './types';
+import { Like, Comment } from 'src/db';
 
 @Injectable()
 export class LoaderService {

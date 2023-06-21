@@ -1,17 +1,15 @@
-import { Post } from './../db/post/post.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Injectable } from '@nestjs/common';
 import { In, Repository } from 'typeorm';
 import {
+  CreateCommentInputDto,
   CreatePostInputDto,
+  FindPostByTitleInputDto,
   LikePostInputDto,
   UpdatePostInputDto,
 } from './dto';
 import { GraphQLError } from 'graphql';
-import { User } from 'src/db/user/user.entity';
-import { Like } from 'src/db/like/like.entity';
-import { CreateCommentInputDto } from './dto/comment.dto';
-import { Comment } from 'src/db/comment/comment.entity';
+import { Like, Post, Comment, User } from 'src/db';
 
 @Injectable()
 export class PostService {
@@ -28,19 +26,18 @@ export class PostService {
     { title, content, image, boardId }: CreatePostInputDto,
     { id: userId }: User,
   ) {
-    const post = await this.postRepository.save(
-      this.postRepository.create({
-        title,
-        content,
-        image,
-        board: {
-          id: boardId,
-        },
-        user: {
-          id: userId,
-        },
-      }),
-    );
+    const post = await this.postRepository.create({
+      title,
+      content,
+      image,
+      board: {
+        id: boardId,
+      },
+      user: {
+        id: userId,
+      },
+    });
+    await this.postRepository.save(post);
     return post;
   }
 
@@ -49,7 +46,7 @@ export class PostService {
       where: {
         id,
       },
-      relations: ['user', 'board'],
+      relations: ['board'],
     });
 
     if (!post) {
@@ -59,22 +56,33 @@ export class PostService {
     return post;
   }
 
+  /**
+   * dataLoader로 불러올때 사용
+   * @param postIds
+   * @returns
+   */
   async getLikesByPostId(postIds: number[]) {
     const likes = await this.likeRepository.find({
       where: {
         postId: In(postIds),
+        isLike: true,
       },
     });
     return likes;
   }
 
+  /**
+   * dataLoader로 불러올때 사용
+   * @param postIds
+   * @returns
+   */
   async getCommentsByPostId(postIds: number[]) {
-    const likes = await this.commentRepository.find({
+    const comments = await this.commentRepository.find({
       where: {
         postId: In(postIds),
       },
     });
-    return likes;
+    return comments;
   }
 
   async updatePost({ id, title, content, image }: UpdatePostInputDto) {
@@ -98,9 +106,23 @@ export class PostService {
     return updatedPost;
   }
 
-  async deletePost(id: number) {
+  async deletePost(postId: number, { id: userId }: User) {
+    const post = await this.postRepository.findOne({
+      where: {
+        id: postId,
+      },
+    });
+
+    if (!post) {
+      throw new GraphQLError('게시글을 찾을 수 없습니다.');
+    }
+
+    if (post.user.id !== userId) {
+      throw new GraphQLError('게시글을 삭제할 권한이 없습니다.');
+    }
+
     await this.postRepository.delete({
-      id,
+      id: postId,
     });
 
     return true;
@@ -138,19 +160,17 @@ export class PostService {
     { content, parentId, postId }: CreateCommentInputDto,
     { id: userId }: User,
   ) {
-    const comment = await this.commentRepository.save(
-      this.commentRepository.create({
-        content,
-        parent_id: parentId ? parentId : null,
-        post: {
-          id: postId,
-        },
-        user: {
-          id: userId,
-        },
-      }),
-    );
-    // TODO: 반환값 수정 필요
+    const comment = this.commentRepository.create({
+      content,
+      parent_id: parentId ? parentId : null,
+      post: {
+        id: postId,
+      },
+      user: {
+        id: userId,
+      },
+    });
+    await this.commentRepository.save(comment);
     return comment;
   }
 
@@ -174,5 +194,15 @@ export class PostService {
     });
 
     return true;
+  }
+
+  async findPostByTitle({ title }: FindPostByTitleInputDto) {
+    const post = await this.postRepository.findOne({
+      where: {
+        title,
+      },
+    });
+
+    return post;
   }
 }

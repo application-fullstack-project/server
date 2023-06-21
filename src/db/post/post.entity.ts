@@ -1,4 +1,4 @@
-import { Entity, Column, ManyToOne, OneToMany } from 'typeorm';
+import { Entity, Column, ManyToOne, OneToMany, JoinColumn } from 'typeorm';
 import { BaseEntity } from '../base/base.entity';
 import { User } from '../user/user.entity';
 import { Board } from '../board/board.entity';
@@ -22,7 +22,11 @@ export class Post extends BaseEntity {
   image?: string;
 
   @ManyToOne(() => User, (user) => user.posts)
+  @JoinColumn({ name: 'userId' })
   user: User;
+
+  @Column({ type: 'int', nullable: false })
+  userId: number;
 
   @ManyToOne(() => Board, (board) => board.posts)
   @Field(() => Board, { nullable: false })

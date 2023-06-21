@@ -39,6 +39,7 @@ import { LoaderService } from './loader/loader.service';
         database: configService.get<string>('DB_NAME'),
         entities: [__dirname + '/**/*.entity{.ts,.js}'],
         synchronize: true,
+        logging: true,
       }),
     }),
     ConfigModule.forRoot({
