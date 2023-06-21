@@ -21,6 +21,7 @@ import {
   UpdatePostInputDto,
 } from './dto';
 import { Like, Post, Comment, User } from 'src/db';
+import { Roles } from 'src/guard/role-decorator';
 
 @Resolver(() => Post)
 export class PostResolver {
@@ -42,6 +43,12 @@ export class PostResolver {
     @Args('id', { type: () => Int }) postId: number,
   ): Promise<Post> {
     return await this.postService.getOnePost(postId);
+  }
+
+  @UseGuards(AuthGuard)
+  @Query(() => [Post])
+  async getPolularPosts(): Promise<Post[]> {
+    return await this.postService.getPolularPosts();
   }
 
   @ResolveField('likes', () => [Like])
@@ -73,9 +80,18 @@ export class PostResolver {
   @Mutation(() => Boolean)
   async deletePost(
     @Args('postId', { type: () => Int }) postId: number,
-    @CurrentUser() user: User,
+    @CurrentUser() { id: userId }: User,
   ): Promise<boolean> {
-    return await this.postService.deletePost(postId, user);
+    return await this.postService.deletePost(postId, userId);
+  }
+
+  @UseGuards(AuthGuard)
+  @Mutation(() => Boolean)
+  @Roles('ADMIN')
+  async deletePostAdmin(
+    @Args('postId', { type: () => Int }) postId: number,
+  ): Promise<boolean> {
+    return await this.postService.deletePost(postId);
   }
 
   @UseGuards(AuthGuard)
@@ -107,7 +123,7 @@ export class PostResolver {
   }
 
   @UseGuards(AuthGuard)
-  @Mutation(() => Post)
+  @Query(() => Post)
   async findPostByTitle(
     @Args('input', { type: () => FindPostByTitleInputDto })
     input: FindPostByTitleInputDto,

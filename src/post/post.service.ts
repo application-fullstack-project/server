@@ -96,17 +96,22 @@ export class PostService {
       throw new GraphQLError('게시글을 찾을 수 없습니다.');
     }
 
-    const updatedPost = await this.postRepository.save({
-      id,
-      title,
-      content,
-      image,
-    });
+    post.title = title ? title : post.title;
+    post.content = content ? content : post.content;
+    post.image = image ? image : post.image;
 
-    return updatedPost;
+    await this.postRepository.save(post);
+
+    return post;
   }
 
-  async deletePost(postId: number, { id: userId }: User) {
+  /**
+   * userId가 있다면 해당 유저가 작성한 게시글만 삭제 가능, 없다면 모든 유저가 삭제 가능
+   * @param postId
+   * @param userId
+   * @returns
+   */
+  async deletePost(postId: number, userId?: number) {
     const post = await this.postRepository.findOne({
       where: {
         id: postId,
@@ -117,7 +122,7 @@ export class PostService {
       throw new GraphQLError('게시글을 찾을 수 없습니다.');
     }
 
-    if (post.user.id !== userId) {
+    if (userId && post.user.id !== userId) {
       throw new GraphQLError('게시글을 삭제할 권한이 없습니다.');
     }
 
@@ -204,5 +209,22 @@ export class PostService {
     });
 
     return post;
+  }
+
+  async getPolularPosts() {
+    // 24시간 이내 좋아요가 5개 이상인 게시물 조회
+    const posts = await this.postRepository
+      .createQueryBuilder('post')
+      .leftJoin('post.likes', 'like')
+      .select('post.id')
+      .addSelect('COUNT(like.id)', 'likeCount')
+      .where('like.created_date > :date', {
+        date: new Date(Date.now() - 24 * 60 * 60 * 1000),
+      })
+      .groupBy('post.id')
+      .having('COUNT(like.id) > :count', { count: 5 })
+      .getMany();
+
+    return posts;
   }
 }

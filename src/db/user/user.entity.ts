@@ -35,10 +35,6 @@ export class User extends BaseEntity {
 
   @Column({ type: 'varchar', length: 1023, unique: false, nullable: true })
   @Field(() => String, { nullable: true })
-  refresh_token?: string;
-
-  @Column({ type: 'varchar', length: 1023, unique: false, nullable: true })
-  @Field(() => String, { nullable: true })
   push_token?: string;
 
   @Column({ type: 'enum', enum: UserRole, default: UserRole.USER })

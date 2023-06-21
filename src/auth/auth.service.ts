@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from 'src/db/user/user.entity';
 import { JwtService } from '@nestjs/jwt';
 import { GraphQLError } from 'graphql';
 import {
@@ -10,6 +9,7 @@ import {
   SingUpInputDto,
   SingUpOutputDto,
 } from './dto';
+import { User } from 'src/db';
 
 @Injectable()
 export class AuthService {
@@ -32,8 +32,6 @@ export class AuthService {
       select: ['email'],
     })) as { email: string };
 
-    console.log(existEmail, email, password, nickName);
-
     if (existEmail) {
       throw new GraphQLError('이미 존재하는 이메일입니다.');
     }
@@ -51,13 +49,12 @@ export class AuthService {
     }
 
     // db에 유저 저장
-    await this.userRepository.save(
-      this.userRepository.create({
-        email,
-        password,
-        nick_name: nickName,
-      }),
-    );
+    const user = this.userRepository.create({
+      email,
+      password,
+      nick_name: nickName,
+    });
+    await this.userRepository.save(user);
 
     return { isSuccess: true };
   }
@@ -76,20 +73,8 @@ export class AuthService {
     }
 
     // 토큰 생성
-    const token = this.jwtService.sign({ id: user.id }, { expiresIn: '10d' });
+    const token = this.jwtService.sign({ id: user.id });
 
-    // 리프레시 토큰 생성
-    const refreshToken = this.jwtService.sign(
-      { id: user.id },
-      { expiresIn: '10d' },
-    );
-
-    // user의 리프레시토큰 업데이트
-    await this.userRepository.update(
-      { id: user.id },
-      { refresh_token: refreshToken },
-    );
-
-    return { token, refreshToken };
+    return { token };
   }
 }

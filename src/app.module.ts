@@ -47,6 +47,7 @@ import { LoaderService } from './loader/loader.service';
       envFilePath: '.env',
       validationSchema: Joi.object({
         JWT_SECRET: Joi.string().required(),
+        JWT_EXPIRES_IN: Joi.string().required(),
         DB_HOST: Joi.string().required(),
         DB_PORT: Joi.string().required(),
         DB_USER: Joi.string().required(),

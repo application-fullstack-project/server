@@ -8,7 +8,6 @@ user {
     string email UK 
     string nick_name UK
     string password
-    string refresh_token "optional"
     string puhs_token "optional"
     role ROLE_ENUM
 }

@@ -2,22 +2,111 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type Board {
+  created_date: DateTime!
+  deleted_date: DateTime!
+  id: ID!
+  title: String!
+  updated_data: DateTime!
+}
+
+type Comment {
+  content: String!
+  created_date: DateTime!
+  deleted_date: DateTime!
+  id: ID!
+  parent_id: Int
+  post: Post!
+  updated_data: DateTime!
+  user: User!
+}
+
+input CreateBoardInputDto {
+  title: String!
+}
+
+input CreateCommentInputDto {
+  content: String!
+  parentId: Int
+  postId: Int!
+}
+
+input CreatePostInputDto {
+  boardId: Int!
+  content: String!
+  image: String
+  title: String!
+}
+
 """
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
 scalar DateTime
 
+input FindPostByTitleInputDto {
+  title: String!
+}
+
+type Like {
+  created_date: DateTime!
+  deleted_date: DateTime!
+  id: ID!
+  isLike: Boolean!
+  post: Post!
+  updated_data: DateTime!
+  user: User!
+}
+
+input LikePostInputDto {
+  like: Boolean!
+  postId: Int!
+}
+
 type Mutation {
+  """유저 닉네임 변경하기"""
+  changeNickname(nickname: String!): User!
+
+  """유저 닉네임 변경하기"""
+  changePushSetting(isPush: Boolean!): User!
+  createBoard(input: CreateBoardInputDto!): Board!
+  createComment(input: CreateCommentInputDto!): Comment!
+  createPost(input: CreatePostInputDto!): Post!
+  deleteBoard(boardId: Int!): Boolean!
+  deleteComment(commentId: Int!): Boolean!
+  deletePost(postId: Int!): Boolean!
+  deletePostAdmin(postId: Int!): Boolean!
+  likePost(input: LikePostInputDto!): Boolean!
+
   """로그인"""
   signin(input: SingInInputDto!): SingInOutputDto!
 
   """회원가입"""
   signup(input: SingUpInputDto!): SingUpOutputDto!
+  updateBoard(input: UpdateBoardInputDto!): Board!
+  updatePost(input: UpdatePostInputDto!): Post!
+}
+
+type Post {
+  board: Board!
+  comments: [Comment!]!
+  content: String!
+  created_date: DateTime!
+  deleted_date: DateTime!
+  id: ID!
+  image: String
+  likes: [Like!]!
+  title: String!
+  updated_data: DateTime!
 }
 
 type Query {
+  findPostByTitle(input: FindPostByTitleInputDto!): Post!
+  getAllBoard: [Board!]!
+
   """내 정보 가져오기"""
   getMe: User!
+  getOnePost(id: Int!): Post!
+  getPolularPosts: [Post!]!
   hello: String!
 }
 
@@ -30,9 +119,6 @@ input SingInInputDto {
 }
 
 type SingInOutputDto {
-  """리프레쉬 토큰"""
-  refreshToken: String!
-
   """토큰"""
   token: String!
 }
@@ -47,14 +133,29 @@ type SingUpOutputDto {
   isSuccess: Boolean!
 }
 
+input UpdateBoardInputDto {
+  id: Int!
+  title: String!
+}
+
+input UpdatePostInputDto {
+  content: String
+  id: Int!
+  image: String
+  title: String
+}
+
 type User {
+  comments: [Comment!]
   created_date: DateTime!
   deleted_date: DateTime!
   email: String!
   id: ID!
+  isPush: Boolean!
+  likes: [Like!]
   nick_name: String!
+  posts: [Post!]
   push_token: String
-  refresh_token: String
   role: UserRole!
   updated_data: DateTime!
 }
