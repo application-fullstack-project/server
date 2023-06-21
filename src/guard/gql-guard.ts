@@ -15,17 +15,18 @@ export class AuthGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     // context는 object 객체라서 call by value로 동작한다.
+
     // 토큰 유효성 검증하기
-    const gqlContext = GqlExecutionContext.create(context);
-    this.validateToken(gqlContext);
+    const ctx = GqlExecutionContext.create(context);
+    this.validateToken(ctx);
     // context에 유저 정보 입력하기
-    await this.applyUserToContext(gqlContext);
+    await this.applyUserToContext(ctx);
     // role 검증하기
     return this.validateRole(context);
   }
 
-  private validateToken(gqlContext: GqlExecutionContext) {
-    const token = gqlContext.getContext().req.headers?.authorization;
+  private validateToken(ctx: GqlExecutionContext) {
+    const token = ctx.getContext().req.headers?.authorization;
     if (!token) {
       throw new GraphQLError('토큰이 잘못되었습니다');
     }
@@ -39,12 +40,12 @@ export class AuthGuard implements CanActivate {
     return rawToken;
   }
 
-  private async applyUserToContext(gqlContext: GqlExecutionContext) {
+  private async applyUserToContext(ctx: GqlExecutionContext) {
     const rawToken =
-      gqlContext.getContext().req.headers?.authorization?.split(' ')[1] || '';
+      ctx.getContext().req.headers?.authorization?.split(' ')[1] || '';
     const userId = this.jwtService.decode(rawToken)['id'];
     const user = await this.userService.getUserById(userId);
-    gqlContext.getContext().user = user;
+    ctx.getContext().user = user;
   }
 
   private validateRole(context: ExecutionContext): boolean {
