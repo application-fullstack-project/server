@@ -12,6 +12,7 @@ import { PostModule } from './post/post.module';
 import { BoardModule } from './board/board.module';
 import { LoaderModule } from './loader/loader.module';
 import { LoaderService } from './loader/loader.service';
+import { ConfigTypes } from './config/config.type';
 
 @Module({
   imports: [
@@ -30,7 +31,7 @@ import { LoaderService } from './loader/loader.service';
     }),
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
+      useFactory: (configService: ConfigService<ConfigTypes>) => ({
         type: 'postgres',
         host: configService.get<string>('DB_HOST'),
         port: configService.get<number>('DB_PORT'),
@@ -45,7 +46,7 @@ import { LoaderService } from './loader/loader.service';
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: '.env',
-      validationSchema: Joi.object({
+      validationSchema: Joi.object<ConfigTypes>({
         JWT_SECRET: Joi.string().required(),
         JWT_EXPIRES_IN: Joi.string().required(),
         DB_HOST: Joi.string().required(),
