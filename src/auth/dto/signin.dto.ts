@@ -1,4 +1,5 @@
 import { Field, InputType, ObjectType } from '@nestjs/graphql';
+import { Transform } from 'class-transformer';
 
 @ObjectType()
 export class SingInOutputDto {
@@ -9,6 +10,7 @@ export class SingInOutputDto {
 @InputType()
 export class SingInInputDto {
   @Field(() => String, { description: '이메일' })
+  @Transform(({ value }) => value.toLowerCase())
   email: string;
 
   @Field(() => String, { description: '비밀번호' })
