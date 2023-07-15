@@ -1,18 +1,18 @@
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
-import { UserModule } from './user/user.module';
-import { AuthModule } from './auth/auth.module';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { UserModule } from './domain/user/user.module';
+import { AuthModule } from './domain/auth/auth.module';
+import { ConfigModule } from '@nestjs/config';
 import * as Joi from 'joi';
-import { PostModule } from './post/post.module';
-import { BoardModule } from './board/board.module';
+import { PostModule } from './domain/post/post.module';
+import { BoardModule } from './domain/board/board.module';
 import { LoaderModule } from './loader/loader.module';
 import { LoaderService } from './loader/loader.service';
 import { ConfigTypes } from './config/config.type';
+import { DatabaseModule } from './db/database.module';
+import { CommentModule } from './domain/comment/comment.module';
 
 @Module({
   imports: [
@@ -29,20 +29,6 @@ import { ConfigTypes } from './config/config.type';
         }),
       }),
     }),
-    TypeOrmModule.forRootAsync({
-      inject: [ConfigService],
-      useFactory: (configService: ConfigService<ConfigTypes>) => ({
-        type: 'postgres',
-        host: configService.get<string>('DB_HOST'),
-        port: configService.get<number>('DB_PORT'),
-        username: configService.get<string>('DB_USER'),
-        password: configService.get<string>('DB_PASSWORD'),
-        database: configService.get<string>('DB_NAME'),
-        entities: [__dirname + '/**/*.entity{.ts,.js}'],
-        synchronize: true,
-        logging: true,
-      }),
-    }),
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: '.env',
@@ -56,12 +42,14 @@ import { ConfigTypes } from './config/config.type';
         DB_NAME: Joi.string().required(),
       }),
     }),
+    DatabaseModule,
     AuthModule,
     UserModule,
     PostModule,
     BoardModule,
+    CommentModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  exports: [DatabaseModule],
 })
 export class AppModule {}

@@ -3,13 +3,13 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateBoardInputDto, UpdateBoardInputDto } from './dto';
 import { GraphQLError } from 'graphql';
-import { Board } from 'src/db';
+import { Board, BoardRepository } from 'src/db';
 
 @Injectable()
 export class BoardService {
   constructor(
-    @InjectRepository(Board)
-    private readonly boardRepository: Repository<Board>,
+    @InjectRepository(BoardRepository)
+    private readonly boardRepository: BoardRepository,
   ) {}
 
   async createBoard({ title, description }: CreateBoardInputDto) {

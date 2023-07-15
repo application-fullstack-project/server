@@ -12,27 +12,27 @@ export class BoardResolver {
 
   @UseGuards(AuthGuard)
   @Roles('ADMIN')
-  @Mutation(() => Board)
+  @Mutation(() => Board, { description: '게시판 생성' })
   async createBoard(@Args('input') input: CreateBoardInputDto): Promise<Board> {
     return await this.boardService.createBoard(input);
   }
 
   @UseGuards(AuthGuard)
   @Roles('ADMIN')
-  @Mutation(() => Board)
+  @Mutation(() => Board, { description: '게시판 이름 수정' })
   async updateBoard(@Args('input') input: UpdateBoardInputDto): Promise<Board> {
     return await this.boardService.updateBoard(input);
   }
 
   @UseGuards(AuthGuard)
-  @Query(() => [Board])
+  @Query(() => [Board], { description: '게시판 리스트 조회' })
   async getAllBoard(): Promise<Board[]> {
     return await this.boardService.getAllBoard();
   }
 
   @UseGuards(AuthGuard)
   @Roles('ADMIN')
-  @Mutation(() => Boolean)
+  @Mutation(() => Boolean, { description: '게시판 삭제' })
   async deleteBoard(
     @Args('boardId', { type: () => Int }) boardId: number,
   ): Promise<Board> {

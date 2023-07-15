@@ -5,11 +5,12 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   DeleteDateColumn,
+  BaseEntity,
 } from 'typeorm';
 
 @Entity({ synchronize: false })
 @ObjectType()
-export class BaseEntity {
+export class CustomBaseEntity extends BaseEntity {
   @Field(() => ID)
   @PrimaryGeneratedColumn()
   id: number;
