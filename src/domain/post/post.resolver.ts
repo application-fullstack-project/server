@@ -15,7 +15,6 @@ import { AuthGuard } from 'src/guard/gql-guard';
 import { CurrentUser } from 'src/guard/current-user';
 import { CommentsByPostIdLoader, LikeByPostIdLoader } from 'src/loader/types';
 import {
-  CreateCommentInputDto,
   CreatePostInputDto,
   LikePostInputDto,
   UpdatePostInputDto,
@@ -28,7 +27,7 @@ export class PostResolver {
   constructor(private readonly postService: PostService) {}
 
   @UseGuards(AuthGuard)
-  @Mutation(() => Post)
+  @Mutation(() => Post, { description: '게시글 작성' })
   async createPost(
     @Args('input', { type: () => CreatePostInputDto })
     input: CreatePostInputDto,
@@ -38,7 +37,7 @@ export class PostResolver {
   }
 
   @UseGuards(AuthGuard)
-  @Query(() => Post)
+  @Query(() => Post, { description: '한개의 게시글 조회' })
   async getOnePost(
     @Args('id', { type: () => Int }) postId: number,
   ): Promise<Post> {
@@ -46,7 +45,7 @@ export class PostResolver {
   }
 
   @UseGuards(AuthGuard)
-  @Query(() => [Post])
+  @Query(() => [Post], { description: '인기 게시물 조회' })
   async getPolularPosts(): Promise<Post[]> {
     return await this.postService.getPolularPosts();
   }
@@ -68,7 +67,7 @@ export class PostResolver {
   }
 
   @UseGuards(AuthGuard)
-  @Mutation(() => Post)
+  @Mutation(() => Post, { description: '게시글 수정' })
   async updatePost(
     @Args('input', { type: () => UpdatePostInputDto })
     input: UpdatePostInputDto,
@@ -77,7 +76,7 @@ export class PostResolver {
   }
 
   @UseGuards(AuthGuard)
-  @Mutation(() => Boolean)
+  @Mutation(() => Boolean, { description: '게시글 삭제' })
   async deletePost(
     @Args('postId', { type: () => Int }) postId: number,
     @CurrentUser() { id: userId }: User,
@@ -86,7 +85,7 @@ export class PostResolver {
   }
 
   @UseGuards(AuthGuard)
-  @Mutation(() => Boolean)
+  @Mutation(() => Boolean, { description: '관리자용 게시글 삭제' })
   @Roles('ADMIN')
   async deletePostAdmin(
     @Args('postId', { type: () => Int }) postId: number,
@@ -95,26 +94,7 @@ export class PostResolver {
   }
 
   @UseGuards(AuthGuard)
-  @Mutation(() => Comment)
-  async createComment(
-    @Args('input', { type: () => CreateCommentInputDto })
-    input: CreateCommentInputDto,
-    @CurrentUser() user: User,
-  ): Promise<Comment> {
-    return await this.postService.createComment(input, user);
-  }
-
-  @UseGuards(AuthGuard)
-  @Mutation(() => Boolean)
-  async deleteComment(
-    @Args('commentId', { type: () => Int }) commentId: number,
-    @CurrentUser() user: User,
-  ): Promise<boolean> {
-    return await this.postService.deleteComment(commentId, user);
-  }
-
-  @UseGuards(AuthGuard)
-  @Mutation(() => Boolean)
+  @Mutation(() => Boolean, { description: '게시글 좋아요 클릭' })
   async likePost(
     @Args('input', { type: () => LikePostInputDto }) input: LikePostInputDto,
     @CurrentUser() user: User,
@@ -123,7 +103,7 @@ export class PostResolver {
   }
 
   @UseGuards(AuthGuard)
-  @Query(() => Post)
+  @Query(() => Post, { description: '게시글 제목으로 조회' })
   async findPostByTitle(
     @Args('input', { type: () => FindPostByTitleInputDto })
     input: FindPostByTitleInputDto,

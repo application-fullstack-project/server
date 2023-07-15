@@ -1,11 +1,11 @@
 import { Entity, Column, OneToMany } from 'typeorm';
-import { BaseEntity } from '../base/base.entity';
+import { CustomBaseEntity } from '../base/custom.base.entity';
 import { Post } from '../post/post.entity';
 import { Field, ObjectType } from '@nestjs/graphql';
 
 @Entity()
 @ObjectType()
-export class Board extends BaseEntity {
+export class Board extends CustomBaseEntity {
   @Column({ type: 'varchar', length: 255, unique: false })
   @Field(() => String)
   title: string;

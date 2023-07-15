@@ -1,41 +1,36 @@
-import { InjectRepository } from '@nestjs/typeorm';
-import { Injectable } from '@nestjs/common';
-import { In, Repository } from 'typeorm';
+import { CommentRepository } from './../../db/comment/comment.repository';
+import { Inject, Injectable } from '@nestjs/common';
+import { In } from 'typeorm';
 import {
-  CreateCommentInputDto,
   CreatePostInputDto,
   FindPostByTitleInputDto,
   LikePostInputDto,
   UpdatePostInputDto,
 } from './dto';
 import { GraphQLError } from 'graphql';
-import { Like, Post, Comment, User } from 'src/db';
+import { User, PostRepository, LikeRepository } from 'src/db';
 
+// @InjectRepository(Post)
+// private readonly postRepository: Repository<Post>,
+// @InjectRepository(Like)
+// private readonly likeRepository: Repository<Like>,
+// @InjectRepository(Comment)
+// private readonly commentRepository: Repository<Comment>,
 @Injectable()
 export class PostService {
   constructor(
-    @InjectRepository(Post)
-    private readonly postRepository: Repository<Post>,
-    @InjectRepository(Like)
-    private readonly likeRepository: Repository<Like>,
-    @InjectRepository(Comment)
-    private readonly commentRepository: Repository<Comment>,
+    @Inject(PostRepository)
+    private readonly postRepository: PostRepository,
+    @Inject(LikeRepository)
+    private readonly likeRepository: LikeRepository,
+    @Inject(CommentRepository)
+    private readonly commentRepository: CommentRepository,
   ) {}
 
-  async createPost(
-    { title, content, image, boardId }: CreatePostInputDto,
-    { id: userId }: User,
-  ) {
+  async createPost(createPostInput: CreatePostInputDto, { id: userId }: User) {
     const post = await this.postRepository.create({
-      title,
-      content,
-      image,
-      board: {
-        id: boardId,
-      },
-      user: {
-        id: userId,
-      },
+      ...createPostInput,
+      userId,
     });
     await this.postRepository.save(post);
     return post;
@@ -138,8 +133,8 @@ export class PostService {
       // 좋아요 관계가 있다면, false를 반환한다.
       const existLike = await this.likeRepository.findOne({
         where: {
-          post: { id: postId },
-          user: { id: userId },
+          postId,
+          userId,
         },
       });
       if (existLike) {
@@ -148,56 +143,16 @@ export class PostService {
       }
       await this.likeRepository.save(
         this.likeRepository.create({
-          post: { id: postId },
-          user: { id: userId },
+          postId,
+          userId,
         }),
       );
     } else {
       await this.likeRepository.delete({
-        post: { id: postId },
-        user: { id: userId },
+        postId,
+        userId,
       });
     }
-    return true;
-  }
-
-  async createComment(
-    { content, parentId, postId }: CreateCommentInputDto,
-    { id: userId }: User,
-  ) {
-    const comment = this.commentRepository.create({
-      content,
-      parent_id: parentId ? parentId : null,
-      post: {
-        id: postId,
-      },
-      user: {
-        id: userId,
-      },
-    });
-    await this.commentRepository.save(comment);
-    return comment;
-  }
-
-  async deleteComment(commentId: number, { id: userId }: User) {
-    const comment = await this.commentRepository.findOne({
-      where: {
-        id: commentId,
-      },
-    });
-
-    if (!comment) {
-      throw new GraphQLError('댓글을 찾을 수 없습니다.');
-    }
-
-    if (comment.user.id !== userId) {
-      throw new GraphQLError('댓글을 삭제할 권한이 없습니다.');
-    }
-
-    await this.commentRepository.delete({
-      id: commentId,
-    });
-
     return true;
   }
 
@@ -213,18 +168,7 @@ export class PostService {
 
   async getPolularPosts() {
     // 24시간 이내 좋아요가 5개 이상인 게시물 조회
-    const posts = await this.postRepository
-      .createQueryBuilder('post')
-      .leftJoin('post.likes', 'like')
-      .select('post.id')
-      .addSelect('COUNT(like.id)', 'likeCount')
-      .where('like.created_date > :date', {
-        date: new Date(Date.now() - 24 * 60 * 60 * 1000),
-      })
-      .groupBy('post.id')
-      .having('COUNT(like.id) > :count', { count: 5 })
-      .getMany();
-
+    const posts = await this.postRepository.getPolularPosts();
     return posts;
   }
 }

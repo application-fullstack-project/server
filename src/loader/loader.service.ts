@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import * as DataLoader from 'dataloader';
-import { PostService } from 'src/post/post.service';
+import { PostService } from 'src/domain/post/post.service';
 import { CommentsByPostIdLoader, LikeByPostIdLoader } from './types';
 import { Like, Comment } from 'src/db';
 

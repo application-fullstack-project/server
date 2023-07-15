@@ -1,10 +1,10 @@
 import { Entity, Column, OneToMany } from 'typeorm';
-import { BaseEntity } from '../base/base.entity';
 import { UserRole } from './role';
 import { Post } from '../post/post.entity';
 import { Like } from '../like/like.entity';
 import { Field, ObjectType, registerEnumType } from '@nestjs/graphql';
 import { Comment } from '../comment/comment.entity';
+import { CustomBaseEntity } from '../base/custom.base.entity';
 
 registerEnumType(UserRole, {
   name: 'UserRole',
@@ -21,21 +21,27 @@ registerEnumType(UserRole, {
 
 @Entity()
 @ObjectType()
-export class User extends BaseEntity {
+export class User extends CustomBaseEntity {
   @Column({ type: 'varchar', length: 255, unique: true })
   @Field(() => String)
   email: string;
 
-  @Column({ type: 'varchar', length: 255, unique: true })
+  @Column({ name: 'nick_name', type: 'varchar', length: 255, unique: true })
   @Field(() => String)
-  nick_name: string;
+  nickName: string;
 
   @Column({ type: 'varchar', length: 255, unique: false })
   password: string;
 
-  @Column({ type: 'varchar', length: 1023, unique: false, nullable: true })
+  @Column({
+    name: 'push_token',
+    type: 'varchar',
+    length: 1023,
+    unique: false,
+    nullable: true,
+  })
   @Field(() => String, { nullable: true })
-  push_token?: string;
+  pushToken?: string;
 
   @Column({ type: 'enum', enum: UserRole, default: UserRole.USER })
   @Field(() => UserRole)

@@ -2,7 +2,7 @@ import { JwtService } from '@nestjs/jwt';
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { GqlExecutionContext } from '@nestjs/graphql';
 import { GraphQLError } from 'graphql';
-import { UserService } from 'src/user/user.service';
+import { UserService } from 'src/domain/user/user.service';
 import { Reflector } from '@nestjs/core';
 
 @Injectable()
