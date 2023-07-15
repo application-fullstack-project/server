@@ -1,13 +1,10 @@
-import { Like } from 'src/db/like/like.entity';
 import { Module } from '@nestjs/common';
 import { LoaderService } from './loader.service';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { PostService } from 'src/domain/post/post.service';
-import { Post } from 'src/db/post/post.entity';
-import { Comment } from 'src/db/comment/comment.entity';
+import { DatabaseModule } from 'src/db';
+import { PostService } from 'src/domain/post';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Post, Like, Comment])],
+  imports: [DatabaseModule],
   providers: [LoaderService, PostService],
   exports: [LoaderService],
 })

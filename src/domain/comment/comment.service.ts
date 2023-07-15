@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { CreateCommentInputDto } from './dto/create-comment.dto';
+import { CreateCommentInputDto } from './dto';
 import { CommentRepository, User } from 'src/db';
 import { GraphQLError } from 'graphql';
 

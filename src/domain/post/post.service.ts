@@ -1,4 +1,3 @@
-import { CommentRepository } from './../../db/comment/comment.repository';
 import { Inject, Injectable } from '@nestjs/common';
 import { In } from 'typeorm';
 import {
@@ -8,14 +7,13 @@ import {
   UpdatePostInputDto,
 } from './dto';
 import { GraphQLError } from 'graphql';
-import { User, PostRepository, LikeRepository } from 'src/db';
+import {
+  User,
+  PostRepository,
+  LikeRepository,
+  CommentRepository,
+} from 'src/db';
 
-// @InjectRepository(Post)
-// private readonly postRepository: Repository<Post>,
-// @InjectRepository(Like)
-// private readonly likeRepository: Repository<Like>,
-// @InjectRepository(Comment)
-// private readonly commentRepository: Repository<Comment>,
 @Injectable()
 export class PostService {
   constructor(

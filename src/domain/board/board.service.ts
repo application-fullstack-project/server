@@ -1,9 +1,8 @@
-import { Repository } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateBoardInputDto, UpdateBoardInputDto } from './dto';
 import { GraphQLError } from 'graphql';
-import { Board, BoardRepository } from 'src/db';
+import { BoardRepository } from 'src/db';
 
 @Injectable()
 export class BoardService {
