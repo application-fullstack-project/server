@@ -15,7 +15,7 @@ type Comment {
   created_date: DateTime!
   deleted_date: DateTime!
   id: ID!
-  parent_id: Int
+  parentId: Int
   post: Post!
   updated_data: DateTime!
   user: User!
@@ -68,13 +68,29 @@ type Mutation {
 
   """유저 닉네임 변경하기"""
   changePushSetting(isPush: Boolean!): User!
+
+  """게시판 생성"""
   createBoard(input: CreateBoardInputDto!): Board!
+
+  """댓글 작성"""
   createComment(input: CreateCommentInputDto!): Comment!
+
+  """게시글 작성"""
   createPost(input: CreatePostInputDto!): Post!
+
+  """게시판 삭제"""
   deleteBoard(boardId: Int!): Boolean!
+
+  """댓글 삭제"""
   deleteComment(commentId: Int!): Boolean!
+
+  """게시글 삭제"""
   deletePost(postId: Int!): Boolean!
+
+  """관리자용 게시글 삭제"""
   deletePostAdmin(postId: Int!): Boolean!
+
+  """게시글 좋아요 클릭"""
   likePost(input: LikePostInputDto!): Boolean!
 
   """로그인"""
@@ -82,7 +98,11 @@ type Mutation {
 
   """회원가입"""
   signup(input: SingUpInputDto!): SingUpOutputDto!
+
+  """게시판 이름 수정"""
   updateBoard(input: UpdateBoardInputDto!): Board!
+
+  """게시글 수정"""
   updatePost(input: UpdatePostInputDto!): Post!
 }
 
@@ -100,12 +120,19 @@ type Post {
 }
 
 type Query {
+  """게시글 제목으로 조회"""
   findPostByTitle(input: FindPostByTitleInputDto!): Post!
+
+  """게시판 리스트 조회"""
   getAllBoard: [Board!]!
 
   """내 정보 가져오기"""
   getMe: User!
+
+  """한개의 게시글 조회"""
   getOnePost(id: Int!): Post!
+
+  """인기 게시물 조회"""
   getPolularPosts: [Post!]!
   hello: String!
 }
@@ -153,9 +180,9 @@ type User {
   id: ID!
   isPush: Boolean!
   likes: [Like!]
-  nick_name: String!
+  nickName: String!
   posts: [Post!]
-  push_token: String
+  pushToken: String
   role: UserRole!
   updated_data: DateTime!
 }

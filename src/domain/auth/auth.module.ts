@@ -1,9 +1,10 @@
 import { ConfigService } from '@nestjs/config';
 import { Global, Module } from '@nestjs/common';
+import { JwtModule } from '@nestjs/jwt';
 import { AuthService } from './auth.service';
 import { AuthResolver } from './auth.resolver';
-import { JwtModule } from '@nestjs/jwt';
 import { DatabaseModule } from 'src/db';
+import { UserService } from '../user';
 
 @Global()
 @Module({
@@ -18,7 +19,7 @@ import { DatabaseModule } from 'src/db';
       }),
     }),
   ],
-  providers: [AuthService, AuthResolver],
-  exports: [AuthService, JwtModule],
+  providers: [AuthService, AuthResolver, UserService],
+  exports: [JwtModule, UserService],
 })
 export class AuthModule {}

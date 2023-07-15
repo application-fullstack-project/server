@@ -3,10 +3,7 @@ import { User, UserRepository } from 'src/db';
 
 @Injectable()
 export class UserService {
-  constructor(
-    @Inject(UserRepository)
-    private readonly userRepository: UserRepository,
-  ) {}
+  constructor(private readonly userRepository: UserRepository) {}
 
   hello() {
     return 'Hello World!';
@@ -36,7 +33,7 @@ export class UserService {
       throw new Error('유저를 찾을 수 없습니다.');
     }
 
-    user.nick_name = nickname;
+    user.nickName = nickname;
     await this.userRepository.save(user);
 
     return user;
