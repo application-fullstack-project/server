@@ -1,18 +1,20 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
-import { UserModule } from './domain/user/user.module';
-import { AuthModule } from './domain/auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import * as Joi from 'joi';
-import { PostModule } from './domain/post/post.module';
-import { BoardModule } from './domain/board/board.module';
-import { LoaderModule } from './loader/loader.module';
-import { LoaderService } from './loader/loader.service';
+
+import { UserModule } from './domain/user';
+import { AuthModule } from './domain/auth';
+import { CommentModule } from './domain/comment';
+import { HealthModule } from './domain/health';
+import { PostModule } from './domain/post';
+import { BoardModule } from './domain/board';
+
+import { LoaderModule, LoaderService } from './loader';
+
 import { ConfigTypes } from './config/config.type';
-import { DatabaseModule } from './db/database.module';
-import { CommentModule } from './domain/comment/comment.module';
+import { DatabaseModule } from './db';
 
 @Module({
   imports: [
@@ -48,8 +50,8 @@ import { CommentModule } from './domain/comment/comment.module';
     PostModule,
     BoardModule,
     CommentModule,
+    HealthModule,
   ],
-  controllers: [AppController],
   exports: [DatabaseModule],
 })
 export class AppModule {}

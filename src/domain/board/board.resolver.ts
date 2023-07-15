@@ -1,10 +1,10 @@
+import { Roles } from './../../guard/role-decorator';
 import { UseGuards } from '@nestjs/common';
 import { Resolver, Mutation, Args, Query, Int } from '@nestjs/graphql';
 import { BoardService } from './board.service';
-import { AuthGuard } from 'src/guard/gql-guard';
 import { Board } from 'src/db/board/board.entity';
 import { CreateBoardInputDto, UpdateBoardInputDto } from './dto';
-import { Roles } from 'src/guard/role-decorator';
+import { AuthGuard } from 'src/guard';
 
 @Resolver()
 export class BoardResolver {

@@ -1,11 +1,10 @@
-import { AuthGuard } from 'src/guard/gql-guard';
 import { UseGuards } from '@nestjs/common';
 import { Resolver, Mutation, Args, Int } from '@nestjs/graphql';
 import { CreateCommentInputDto } from './dto';
-import { CurrentUser } from 'src/guard/current-user';
 import { CommentService } from './comment.service';
 import { User } from 'src/db';
 import { Comment } from 'src/db';
+import { AuthGuard, CurrentUser } from 'src/guard';
 
 @Resolver()
 export class CommentResolver {

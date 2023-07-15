@@ -11,8 +11,7 @@ import {
 } from '@nestjs/graphql';
 import { PostService } from './post.service';
 import { UseGuards } from '@nestjs/common';
-import { AuthGuard } from 'src/guard/gql-guard';
-import { CurrentUser } from 'src/guard/current-user';
+import { CurrentUser, AuthGuard } from 'src/guard';
 import { CommentsByPostIdLoader, LikeByPostIdLoader } from 'src/loader/types';
 import {
   CreatePostInputDto,
