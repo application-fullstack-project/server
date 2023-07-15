@@ -5,6 +5,7 @@
 type Board {
   created_date: DateTime!
   deleted_date: DateTime!
+  description: String!
   id: ID!
   title: String!
   updated_data: DateTime!
@@ -22,6 +23,7 @@ type Comment {
 }
 
 input CreateBoardInputDto {
+  description: String
   title: String!
 }
 

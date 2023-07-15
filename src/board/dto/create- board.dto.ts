@@ -4,4 +4,7 @@ import { Field, InputType } from '@nestjs/graphql';
 export class CreateBoardInputDto {
   @Field(() => String)
   title: string;
+
+  @Field(() => String, { nullable: true })
+  description?: string;
 }

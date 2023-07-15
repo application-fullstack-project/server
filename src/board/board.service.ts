@@ -12,10 +12,11 @@ export class BoardService {
     private readonly boardRepository: Repository<Board>,
   ) {}
 
-  async createBoard({ title }: CreateBoardInputDto) {
+  async createBoard({ title, description }: CreateBoardInputDto) {
     const board = await this.boardRepository.save(
       this.boardRepository.create({
         title,
+        description,
       }),
     );
     return board;

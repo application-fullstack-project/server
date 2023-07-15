@@ -6,6 +6,7 @@ import {
   UpdateDateColumn,
   DeleteDateColumn,
 } from 'typeorm';
+
 @Entity({ synchronize: false })
 @ObjectType()
 export class BaseEntity {

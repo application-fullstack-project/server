@@ -8,7 +8,7 @@ user {
     string email UK 
     string nick_name UK
     string password
-    string puhs_token "optional"
+    string push_token "optional"
     role ROLE_ENUM
 }
 post {
@@ -26,6 +26,7 @@ board {
     timestamp updated_data
     timestamp deleted_date
     string title
+    string comment
 }
 like {
     int id PK
