@@ -17,11 +17,8 @@ import {
 @Injectable()
 export class PostService {
   constructor(
-    @Inject(PostRepository)
     private readonly postRepository: PostRepository,
-    @Inject(LikeRepository)
     private readonly likeRepository: LikeRepository,
-    @Inject(CommentRepository)
     private readonly commentRepository: CommentRepository,
   ) {}
 

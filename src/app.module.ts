@@ -52,6 +52,5 @@ import { DatabaseModule } from './db';
     CommentModule,
     HealthModule,
   ],
-  exports: [DatabaseModule],
 })
 export class AppModule {}

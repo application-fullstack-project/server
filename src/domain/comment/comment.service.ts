@@ -1,14 +1,11 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { CreateCommentInputDto } from './dto';
 import { CommentRepository, User } from 'src/db';
 import { GraphQLError } from 'graphql';
 
 @Injectable()
 export class CommentService {
-  constructor(
-    @Inject(CommentRepository)
-    private readonly commentRepository: CommentRepository,
-  ) {}
+  constructor(private readonly commentRepository: CommentRepository) {}
 
   async createComment(
     createCommentInputDto: CreateCommentInputDto,

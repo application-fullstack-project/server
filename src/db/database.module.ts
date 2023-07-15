@@ -39,5 +39,6 @@ import { BoardRepository } from './board/board.repository';
       BoardRepository,
     ]),
   ],
+  exports: [TypeOrmModule, CustomRepositoryModule],
 })
 export class DatabaseModule {}
