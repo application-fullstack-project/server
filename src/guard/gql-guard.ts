@@ -5,6 +5,9 @@ import { GraphQLError } from 'graphql';
 import { UserService } from 'src/domain/user/user.service';
 import { Reflector } from '@nestjs/core';
 
+/**
+ * jwtService와 reflector는 DI 설정을 따로 하지 않아도 주입이 된다. 하지만 기타 서비스들은 DI 설정을 해 주어야 한다. 이를 구현하기 위해서 userSerivce는 Global하게 설정한다. 이는 AuthModule에서 확인할 수 있다.
+ */
 @Injectable()
 export class AuthGuard implements CanActivate {
   constructor(
