@@ -24,6 +24,6 @@ export class CustomBaseEntity extends BaseEntity {
   updated_data: Date;
 
   @DeleteDateColumn({ nullable: true })
-  @Field(() => Date)
+  @Field(() => Date, { nullable: true })
   deleted_date?: Date;
 }
