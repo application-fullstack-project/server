@@ -33,13 +33,6 @@ export class User extends CustomBaseEntity {
   @Column({ type: 'varchar', length: 255, unique: false })
   password: string;
 
-  @Column({
-    name: 'push_token',
-    type: 'varchar',
-    length: 1023,
-    unique: false,
-    nullable: true,
-  })
   @Field(() => String, { nullable: true })
   pushToken?: string;
 
