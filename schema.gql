@@ -14,7 +14,7 @@ type Board {
 type Comment {
   content: String!
   created_date: DateTime!
-  deleted_date: DateTime!
+  deleted_date: DateTime
   id: ID!
   parent_id: Int
   post: Post!
@@ -51,7 +51,7 @@ input FindPostByTitleInputDto {
 
 type Like {
   created_date: DateTime!
-  deleted_date: DateTime!
+  deleted_date: DateTime
   id: ID!
   isLike: Boolean!
   post: Post!
@@ -93,7 +93,7 @@ type Post {
   comments: [Comment!]!
   content: String!
   created_date: DateTime!
-  deleted_date: DateTime!
+  deleted_date: DateTime
   id: ID!
   image: String
   likes: [Like!]!
@@ -150,7 +150,7 @@ input UpdatePostInputDto {
 type User {
   comments: [Comment!]
   created_date: DateTime!
-  deleted_date: DateTime!
+  deleted_date: DateTime
   email: String!
   id: ID!
   isPush: Boolean!

@@ -18,13 +18,13 @@ export class UserService {
     return user;
   }
 
-  async getUserById(id: number): Promise<User> {
+  async getUserByIdForContext(id: number): Promise<ContextUserDto> {
     const user = await this.userRepository.findOne({
       where: {
         id,
       },
     });
-    return user;
+    return ContextUserDto.of(user);
   }
 
   async changeNickname(nickname: string, { id: userId }: User) {

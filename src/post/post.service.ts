@@ -61,7 +61,7 @@ export class PostService {
    * @param postIds
    * @returns
    */
-  async getLikesByPostId(postIds: number[]) {
+  async getLikesByPostId(postIds: readonly number[]) {
     const likes = await this.likeRepository.find({
       where: {
         postId: In(postIds),
@@ -76,7 +76,7 @@ export class PostService {
    * @param postIds
    * @returns
    */
-  async getCommentsByPostId(postIds: number[]) {
+  async getCommentsByPostId(postIds: readonly number[]) {
     const comments = await this.commentRepository.find({
       where: {
         postId: In(postIds),
