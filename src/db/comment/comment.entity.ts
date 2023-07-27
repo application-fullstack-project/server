@@ -1,4 +1,4 @@
-import { CustomBaseEntity } from '../base/custom.base.entity';
+import { CustomBaseEntity } from '../base/custom-base.entity';
 import { ObjectType, Field, Int } from '@nestjs/graphql';
 import { Entity, Column, ManyToOne } from 'typeorm';
 import { Post } from '../post/post.entity';

@@ -1,5 +1,5 @@
 import { Entity, Column, OneToMany } from 'typeorm';
-import { CustomBaseEntity } from '../base/custom.base.entity';
+import { CustomBaseEntity } from '../base/custom-base.entity';
 import { Post } from '../post/post.entity';
 import { Field, ObjectType } from '@nestjs/graphql';
 

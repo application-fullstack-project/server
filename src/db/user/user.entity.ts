@@ -4,7 +4,7 @@ import { Post } from '../post/post.entity';
 import { Like } from '../like/like.entity';
 import { Field, ObjectType, registerEnumType } from '@nestjs/graphql';
 import { Comment } from '../comment/comment.entity';
-import { CustomBaseEntity } from '../base/custom.base.entity';
+import { CustomBaseEntity } from '../base/custom-base.entity';
 
 registerEnumType(UserRole, {
   name: 'UserRole',

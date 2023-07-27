@@ -1,5 +1,5 @@
 import { Entity, Column, ManyToOne, OneToMany, JoinColumn } from 'typeorm';
-import { CustomBaseEntity } from '../base/custom.base.entity';
+import { CustomBaseEntity } from '../base/custom-base.entity';
 import { User } from '../user/user.entity';
 import { Board } from '../board/board.entity';
 import { Like } from '../like/like.entity';
