@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { User, UserRepository } from 'src/db';
 
 @Injectable()
@@ -13,13 +13,13 @@ export class UserService {
     return user;
   }
 
-  async getUserByIdForContext(id: number): Promise<ContextUserDto> {
+  async getUserById(id: number): Promise<User> {
     const user = await this.userRepository.findOne({
       where: {
         id,
       },
     });
-    return ContextUserDto.of(user);
+    return user;
   }
 
   async changeNickname(nickname: string, { id: userId }: User) {
