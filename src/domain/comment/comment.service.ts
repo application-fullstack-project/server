@@ -11,10 +11,8 @@ export class CommentService {
     createCommentInputDto: CreateCommentInputDto,
     { id: userId }: User,
   ) {
-    const { parentId } = createCommentInputDto;
     const comment = this.commentRepository.create({
       ...createCommentInputDto,
-      parentId: parentId ? parentId : null,
       userId,
     });
     await this.commentRepository.save(comment);
@@ -26,6 +24,7 @@ export class CommentService {
       where: {
         id: commentId,
       },
+      relations: ['user'],
     });
 
     if (!comment) {

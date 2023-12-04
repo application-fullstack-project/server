@@ -11,6 +11,7 @@ export class Like extends CustomBaseEntity {
   @Field(() => Post, { nullable: false })
   post: Post;
 
+  @Field(() => Number)
   @Column({ type: 'int', nullable: false })
   postId: number;
 
@@ -18,10 +19,7 @@ export class Like extends CustomBaseEntity {
   @Field(() => User, { nullable: false })
   user: User;
 
+  @Field(() => Number)
   @Column({ type: 'int', nullable: false })
   userId: number;
-
-  @Column({ type: 'boolean', default: true })
-  @Field(() => Boolean)
-  isLike: boolean;
 }

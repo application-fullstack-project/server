@@ -17,7 +17,7 @@ import {
 @Injectable()
 export class PostService {
   constructor(
-    private readonly postRepository: PostRepository,
+  private readonly postRepository: PostRepository,
     private readonly likeRepository: LikeRepository,
     private readonly commentRepository: CommentRepository,
   ) {}
@@ -36,7 +36,7 @@ export class PostService {
       where: {
         id,
       },
-      relations: ['board'],
+      relations: ['board', 'user'],
     });
 
     if (!post) {
@@ -44,6 +44,20 @@ export class PostService {
     }
 
     return post;
+  }
+
+  async getBoardPosts(boardId: number) {
+    const posts = await this.postRepository.find({
+      where: {
+        boardId,
+      },
+      order: {
+        created_date: 'DESC',
+      },
+      relations: ['board'],
+    });
+
+    return posts;
   }
 
   /**
@@ -55,7 +69,6 @@ export class PostService {
     const likes = await this.likeRepository.find({
       where: {
         postId: In(postIds),
-        isLike: true,
       },
     });
     return likes;
@@ -71,6 +84,7 @@ export class PostService {
       where: {
         postId: In(postIds),
       },
+      relations: ['user'],
     });
     return comments;
   }
@@ -106,6 +120,7 @@ export class PostService {
       where: {
         id: postId,
       },
+      relations: ['user'],
     });
 
     if (!post) {
@@ -116,6 +131,13 @@ export class PostService {
       throw new GraphQLError('게시글을 삭제할 권한이 없습니다.');
     }
 
+    // 좋아요, 댓글, 게시글 삭제
+    await this.likeRepository.delete({
+      postId,
+    });
+    await this.commentRepository.delete({
+      postId,
+    });
     await this.postRepository.delete({
       id: postId,
     });
@@ -161,9 +183,9 @@ export class PostService {
     return post;
   }
 
-  async getPolularPosts() {
+  async getPopularPosts() {
     // 24시간 이내 좋아요가 5개 이상인 게시물 조회
-    const posts = await this.postRepository.getPolularPosts();
+    const posts = await this.postRepository.getPopularPosts();
     return posts;
   }
 }

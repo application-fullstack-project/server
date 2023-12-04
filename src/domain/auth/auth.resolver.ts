@@ -1,28 +1,28 @@
 import { Args, Mutation, Resolver } from '@nestjs/graphql';
 import { AuthService } from './auth.service';
 import {
-  SingInInputDto,
-  SingInOutputDto,
-  SingUpInputDto,
-  SingUpOutputDto,
+  SignInInputDto,
+  SignInOutputDto,
+  SignUpInputDto,
+  SignUpOutputDto,
 } from './dto';
 
 @Resolver()
 export class AuthResolver {
   constructor(private readonly authService: AuthService) {}
 
-  @Mutation(() => SingUpOutputDto, { description: '회원가입' })
+  @Mutation(() => SignUpOutputDto, { description: '회원가입' })
   async signup(
-    @Args({ name: 'input', type: () => SingUpInputDto })
-    input: SingUpInputDto,
+    @Args({ name: 'input', type: () => SignUpInputDto })
+    input: SignUpInputDto,
   ) {
     return await this.authService.signup(input);
   }
 
-  @Mutation(() => SingInOutputDto, { description: '로그인' })
+  @Mutation(() => SignInOutputDto, { description: '로그인' })
   async signin(
-    @Args({ name: 'input', type: () => SingInInputDto })
-    input: SingInInputDto,
+    @Args({ name: 'input', type: () => SignInInputDto })
+    input: SignInInputDto,
   ) {
     return await this.authService.signin(input);
   }

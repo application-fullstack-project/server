@@ -28,6 +28,7 @@ import { BoardRepository } from './board/board.repository';
         entities: [__dirname + '/**/*.entity{.ts,.js}'],
         synchronize: false,
         logging: true,
+        logNotifications: true,
       }),
     }),
     TypeOrmModule.forFeature([User, Post, Board, Like, Comment]),

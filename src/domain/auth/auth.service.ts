@@ -2,10 +2,10 @@ import { Inject, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { GraphQLError } from 'graphql';
 import {
-  SingInInputDto,
-  SingInOutputDto,
-  SingUpInputDto,
-  SingUpOutputDto,
+  SignInInputDto,
+  SignInOutputDto,
+  SignUpInputDto,
+  SignUpOutputDto,
 } from './dto';
 import { UserRepository } from 'src/db';
 
@@ -16,7 +16,7 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async signup(signUpInputDto: SingUpInputDto): Promise<SingUpOutputDto> {
+  async signup(signUpInputDto: SignUpInputDto): Promise<SignUpOutputDto> {
     const { email, nickName } = signUpInputDto;
 
     // 이메일 확인
@@ -36,7 +36,7 @@ export class AuthService {
     return { isSuccess: true };
   }
 
-  async signin({ email, password }: SingInInputDto): Promise<SingInOutputDto> {
+  async signin({ email, password }: SignInInputDto): Promise<SignInOutputDto> {
     // 이메일, 비밀번호 확인
     const user = await this.userRepository.findOne({
       where: {
@@ -45,13 +45,17 @@ export class AuthService {
       },
     });
 
+    console.log(email, password, user);
+
     if (!user) {
       throw new GraphQLError('이메일 또는 비밀번호가 일치하지 않습니다.');
     }
 
-    // 토큰 생성
-    const token = this.jwtService.sign({ id: user.id });
+    const { id } = user;
 
-    return { token };
+    // 토큰 생성
+    const token = this.jwtService.sign({ id });
+
+    return { token, id };
   }
 }

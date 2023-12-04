@@ -6,7 +6,7 @@ type Board {
   created_date: DateTime!
   deleted_date: DateTime
   description: String!
-  id: ID!
+  id: Float!
   title: String!
   updated_data: DateTime!
 }
@@ -15,8 +15,7 @@ type Comment {
   content: String!
   created_date: DateTime!
   deleted_date: DateTime
-  id: ID!
-  parentId: Int
+  id: Float!
   post: Post!
   updated_data: DateTime!
   user: User!
@@ -29,7 +28,6 @@ input CreateBoardInputDto {
 
 input CreateCommentInputDto {
   content: String!
-  parentId: Int
   postId: Int!
 }
 
@@ -52,11 +50,12 @@ input FindPostByTitleInputDto {
 type Like {
   created_date: DateTime!
   deleted_date: DateTime
-  id: ID!
-  isLike: Boolean!
+  id: Float!
   post: Post!
+  postId: Float!
   updated_data: DateTime!
   user: User!
+  userId: Float!
 }
 
 input LikePostInputDto {
@@ -65,12 +64,6 @@ input LikePostInputDto {
 }
 
 type Mutation {
-  """유저 닉네임 변경하기"""
-  changeNickname(nickname: String!): User!
-
-  """유저 닉네임 변경하기"""
-  changePushSetting(isPush: Boolean!): User!
-
   """게시판 생성"""
   createBoard(input: CreateBoardInputDto!): Board!
 
@@ -96,13 +89,16 @@ type Mutation {
   likePost(input: LikePostInputDto!): Boolean!
 
   """로그인"""
-  signin(input: SingInInputDto!): SingInOutputDto!
+  signin(input: SignInInputDto!): SignInOutputDto!
 
   """회원가입"""
-  signup(input: SingUpInputDto!): SingUpOutputDto!
+  signup(input: SignUpInputDto!): SignUpOutputDto!
 
   """게시판 이름 수정"""
   updateBoard(input: UpdateBoardInputDto!): Board!
+
+  """유저 정보 변경하기"""
+  updateMe(isPush: Boolean!, nickName: String!): User!
 
   """게시글 수정"""
   updatePost(input: UpdatePostInputDto!): Post!
@@ -114,11 +110,13 @@ type Post {
   content: String!
   created_date: DateTime!
   deleted_date: DateTime
-  id: ID!
+  id: Float!
   image: String
   likes: [Like!]!
   title: String!
   updated_data: DateTime!
+  user: User!
+  userId: Int!
 }
 
 type Query {
@@ -128,6 +126,9 @@ type Query {
   """게시판 리스트 조회"""
   getAllBoard: [Board!]!
 
+  """게시판의 모든 게시물 조회"""
+  getBoardPosts(id: Int!): [Post!]!
+
   """내 정보 가져오기"""
   getMe: User!
 
@@ -135,11 +136,11 @@ type Query {
   getOnePost(id: Int!): Post!
 
   """인기 게시물 조회"""
-  getPolularPosts: [Post!]!
+  getPopularPosts: [Post!]!
   hello: String!
 }
 
-input SingInInputDto {
+input SignInInputDto {
   """이메일"""
   email: String!
 
@@ -147,18 +148,21 @@ input SingInInputDto {
   password: String!
 }
 
-type SingInOutputDto {
+type SignInOutputDto {
+  """고유ID"""
+  id: Float!
+
   """토큰"""
   token: String!
 }
 
-input SingUpInputDto {
+input SignUpInputDto {
   email: String!
   nickName: String!
   password: String!
 }
 
-type SingUpOutputDto {
+type SignUpOutputDto {
   isSuccess: Boolean!
 }
 
@@ -179,7 +183,7 @@ type User {
   created_date: DateTime!
   deleted_date: DateTime
   email: String!
-  id: ID!
+  id: Float!
   isPush: Boolean!
   likes: [Like!]
   nickName: String!

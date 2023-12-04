@@ -35,7 +35,6 @@ export class PostResolver {
     return await this.postService.createPost(input, user);
   }
 
-  @UseGuards(AuthGuard)
   @Query(() => Post, { description: '한개의 게시글 조회' })
   async getOnePost(
     @Args('id', { type: () => Int }) postId: number,
@@ -43,10 +42,16 @@ export class PostResolver {
     return await this.postService.getOnePost(postId);
   }
 
-  @UseGuards(AuthGuard)
+  @Query(() => [Post], { description: '게시판의 모든 게시물 조회' })
+  async getBoardPosts(
+    @Args('id', { type: () => Int }) boardId: number,
+  ): Promise<Post[]> {
+    return await this.postService.getBoardPosts(boardId);
+  }
+
   @Query(() => [Post], { description: '인기 게시물 조회' })
-  async getPolularPosts(): Promise<Post[]> {
-    return await this.postService.getPolularPosts();
+  async getPopularPosts(): Promise<Post[]> {
+    return await this.postService.getPopularPosts();
   }
 
   @ResolveField('likes', () => [Like])

@@ -4,7 +4,7 @@ import { User } from '../user/user.entity';
 import { Board } from '../board/board.entity';
 import { Like } from '../like/like.entity';
 import { Comment } from '../comment/comment.entity';
-import { Field, ObjectType } from '@nestjs/graphql';
+import { Field, Int, ObjectType } from '@nestjs/graphql';
 
 @Entity()
 @ObjectType()
@@ -21,10 +21,12 @@ export class Post extends CustomBaseEntity {
   @Field(() => String, { nullable: true })
   image?: string;
 
+  @Field(() => User)
   @ManyToOne(() => User, (user) => user.posts)
   @JoinColumn({ name: 'userId' })
   user: User;
 
+  @Field(() => Int)
   @Column({ type: 'int', nullable: false })
   userId: number;
 

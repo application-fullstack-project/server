@@ -1,8 +1,17 @@
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import {
+  Args,
+  Context,
+  Mutation,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql';
 import { UserService } from './user.service';
 import { AuthGuard, CurrentUser } from 'src/guard';
 import { UseGuards } from '@nestjs/common';
 import { User } from 'src/db';
+import { Comment } from 'src/db';
 
 @Resolver()
 export class UserResolver {
@@ -20,20 +29,12 @@ export class UserResolver {
   }
 
   @UseGuards(AuthGuard)
-  @Mutation(() => User, { description: '유저 닉네임 변경하기' })
-  async changeNickname(
-    @Args('nickname', { type: () => String }) nickname: string,
-    @CurrentUser() user: User,
-  ) {
-    return await this.userService.changeNickname(nickname, user);
-  }
-
-  @UseGuards(AuthGuard)
-  @Mutation(() => User, { description: '유저 닉네임 변경하기' })
-  async changePushSetting(
+  @Mutation(() => User, { description: '유저 정보 변경하기' })
+  async updateMe(
+    @Args('nickName', { type: () => String }) nickName: string,
     @Args('isPush', { type: () => Boolean }) isPush: boolean,
     @CurrentUser() user: User,
   ) {
-    return await this.userService.changePushSetting(isPush, user);
+    return await this.userService.updateMe(user.id, nickName, isPush);
   }
 }

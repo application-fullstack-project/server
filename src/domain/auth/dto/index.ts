@@ -1,4 +1,4 @@
-import { SingUpInputDto, SingUpOutputDto } from './signup.dto';
-import { SingInInputDto, SingInOutputDto } from './signin.dto';
+import { SignUpInputDto, SignUpOutputDto } from './signup.dto';
+import { SignInInputDto, SignInOutputDto } from './signin.dto';
 
-export { SingUpInputDto, SingUpOutputDto, SingInInputDto, SingInOutputDto };
+export { SignUpInputDto, SignUpOutputDto, SignInInputDto, SignInOutputDto };

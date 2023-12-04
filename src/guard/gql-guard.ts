@@ -34,13 +34,13 @@ export class AuthGuard implements CanActivate {
 
   private validateToken(token: any) {
     if (!token) {
-      throw new GraphQLError('토큰이 존재하지 않습니다.');
+      throw new GraphQLError('로그인 검증에 실패했습니다.');
     }
     const rawToken = token.split(' ')[1];
     try {
       this.jwtService.verify(rawToken);
     } catch (e) {
-      throw new GraphQLError('토큰 검증에 실패했습니다.');
+      throw new GraphQLError('로그인 유효성 체크에 실패했습니다.');
     }
     return rawToken;
   }

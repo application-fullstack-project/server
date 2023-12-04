@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { GraphQLError } from 'graphql';
 import { User, UserRepository } from 'src/db';
 
 @Injectable()
@@ -22,7 +23,7 @@ export class UserService {
     return user;
   }
 
-  async changeNickname(nickname: string, { id: userId }: User) {
+  async updateMe(userId: number, nickName: string, isPush: boolean) {
     const user = await this.userRepository.findOne({
       where: {
         id: userId,
@@ -33,23 +34,7 @@ export class UserService {
       throw new Error('유저를 찾을 수 없습니다.');
     }
 
-    user.nickName = nickname;
-    await this.userRepository.save(user);
-
-    return user;
-  }
-
-  async changePushSetting(isPush: boolean, { id: userId }: User) {
-    const user = await this.userRepository.findOne({
-      where: {
-        id: userId,
-      },
-    });
-
-    if (!user) {
-      throw new Error('유저를 찾을 수 없습니다.');
-    }
-
+    user.nickName = nickName;
     user.isPush = isPush;
     await this.userRepository.save(user);
 

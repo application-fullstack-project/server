@@ -23,8 +23,4 @@ export class Comment extends CustomBaseEntity {
   @Column({ type: 'varchar', length: 255, unique: false })
   @Field(() => String)
   content: string;
-
-  @Column({ name: 'parent_id', type: 'int', nullable: true, unique: false })
-  @Field(() => Int, { nullable: true })
-  parentId?: number;
 }

@@ -1,4 +1,5 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { number } from 'joi';
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -11,7 +12,7 @@ import {
 @Entity({ synchronize: false })
 @ObjectType()
 export class CustomBaseEntity extends BaseEntity {
-  @Field(() => ID)
+  @Field(() => Number)
   @PrimaryGeneratedColumn()
   id: number;
 

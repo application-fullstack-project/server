@@ -24,7 +24,6 @@ export class BoardResolver {
     return await this.boardService.updateBoard(input);
   }
 
-  @UseGuards(AuthGuard)
   @Query(() => [Board], { description: '게시판 리스트 조회' })
   async getAllBoard(): Promise<Board[]> {
     return await this.boardService.getAllBoard();
