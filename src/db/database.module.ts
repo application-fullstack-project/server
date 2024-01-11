@@ -1,7 +1,7 @@
 import { User } from 'src/db';
 import { PostRepository } from './post/post.repository';
 import { Module } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigTypes } from 'src/config/config.type';
 import { Board } from './board/board.entity';
@@ -17,6 +17,7 @@ import { BoardRepository } from './board/board.repository';
 @Module({
   imports: [
     TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService<ConfigTypes>) => ({
         type: 'postgres',
