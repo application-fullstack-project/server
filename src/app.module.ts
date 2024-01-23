@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import * as Joi from 'joi';
 
 import { UserModule } from './domain/user';
@@ -22,9 +22,13 @@ import { DatabaseModule } from './db';
       driver: ApolloDriver,
       imports: [LoaderModule],
       inject: [LoaderService],
-      useFactory: (loaderService: LoaderService) => ({
+      useFactory: (
+        loaderService: LoaderService,
+        configService: ConfigService,
+      ) => ({
         autoSchemaFile: 'schema.gql',
         sortSchema: true,
+        playground: configService.get('NODE_ENV') === 'development',
         context: () => ({
           likeByPostLoader: loaderService.getLikesByPostId(),
           commentByPostLoader: loaderService.getCommentsByPostId(),
@@ -43,6 +47,7 @@ import { DatabaseModule } from './db';
         DB_PASSWORD: Joi.string().required(),
         DB_NAME: Joi.string().required(),
         APP_PORT: Joi.number().required(),
+        NODE_ENV: Joi.string().required(),
       }),
     }),
     DatabaseModule,

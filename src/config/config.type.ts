@@ -7,4 +7,5 @@ export interface ConfigTypes {
   DB_PASSWORD: string;
   DB_NAME: string;
   APP_PORT: number;
+  NODE_ENV: string;
 }
