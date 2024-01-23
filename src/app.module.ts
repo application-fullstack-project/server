@@ -20,8 +20,8 @@ import { DatabaseModule } from './db';
   imports: [
     GraphQLModule.forRootAsync<ApolloDriverConfig>({
       driver: ApolloDriver,
-      imports: [LoaderModule],
-      inject: [LoaderService],
+      imports: [LoaderModule, ConfigModule],
+      inject: [LoaderService, ConfigService],
       useFactory: (
         loaderService: LoaderService,
         configService: ConfigService,
@@ -38,6 +38,7 @@ import { DatabaseModule } from './db';
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: '.env',
+      ignoreEnvFile: process.env.NODE_ENV === 'production',
       validationSchema: Joi.object<ConfigTypes>({
         JWT_SECRET: Joi.string().required(),
         JWT_EXPIRES_IN: Joi.string().required(),
