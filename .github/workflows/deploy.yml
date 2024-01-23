@@ -1,10 +1,9 @@
-name: Deploy API Server to Dev EB
+name: Deploy Server
 
 on:
   push:
     tags:
       - '*'
-
 
 jobs:
   deploy:
